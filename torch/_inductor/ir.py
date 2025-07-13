@@ -763,6 +763,9 @@ class IRNode:
     def get_reads(self) -> OrderedSet[Dep]:
         return self.get_read_writes().reads
 
+    def get_writes(self) -> OrderedSet[Dep]:
+        return self.get_read_writes().writes
+
     def num_reads(self) -> int:
         return len(self.get_reads())
 
@@ -886,6 +889,9 @@ class Loops(IRNode):
     dtype: torch.dtype
     inner_fn: Callable[..., Any]
     ranges: Sequence[_IntLike]
+
+    def make_loader(self) -> Callable[[Sequence[Expr]], OpsValue]:
+        return self.inner_fn
 
     def get_free_symbol_uses(
         self, unbacked_only: bool = False
